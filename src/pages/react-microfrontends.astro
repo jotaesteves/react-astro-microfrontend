@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import UserProfile from "../components/react/UserProfile";
+import ProductCatalog from "../components/react/ProductCatalog";
+import ChatWidget from "../components/react/ChatWidget";
+import AnalyticsDashboard from "../components/react/AnalyticsDashboard";
+import NotificationCenter from "../components/react/NotificationCenter";
+import StatusMonitor from "../components/react/StatusMonitor";
+---
+
+<Layout title="React Microfrontends Example">
+  <main class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">React Microfrontends with Astro.build</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+          This page demonstrates a pure React microfrontend architecture, with each microfrontend rendered using <code
+            >client:only="react"</code
+          > for full React control. Astro is used for layout, routing, and static assets.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <section>
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">User Management</h2>
+          <UserProfile client:only="react" userId={1} />
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Another User</h2>
+          <UserProfile client:only="react" userId={2} />
+        </section>
+      </div>
+
+      <section class="mb-12">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-semibold text-gray-800 mb-4">Product Catalog</h2>
+          <ProductCatalog client:only="react" category="all" limit={6} />
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <section>
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Electronics</h3>
+          <ProductCatalog client:only="react" category="electronics" limit={3} />
+        </section>
+        <section>
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">Sports</h3>
+          <ProductCatalog client:only="react" category="sports" limit={3} />
+        </section>
+      </div>
+
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Analytics Dashboard</h2>
+        <AnalyticsDashboard client:only="react" timeframe="7d" userId={1} />
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <section>
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">System Status</h2>
+          <StatusMonitor
+            client:only="react"
+            services={["api", "database", "cache", "cdn", "auth"]}
+            refreshInterval={15000}
+          />
+        </section>
+        <section>
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Notifications</h2>
+          <NotificationCenter client:only="react" userId={1} maxNotifications={5} />
+        </section>
+      </div>
+    </div>
+    <ChatWidget client:only="react" title="Support Chat" />
+  </main>
+</Layout>

@@ -122,21 +122,35 @@ export default function AnalyticsDashboard({ timeframe = "7d", userId = 1 }: Ana
       {/* Simple Chart */}
       <div className="bg-gray-50 p-4 rounded-lg">
         <h4 className="text-lg font-medium text-gray-800 mb-4">Traffic Trend</h4>
-        <div className="flex items-end space-x-2 h-32">
-          {analytics.chartData.map((item, index) => (
-            <div key={index} className="flex-1 flex flex-col items-center">
-              <div
-                className="bg-blue-500 w-full rounded-t"
-                style={{
-                  height: `${(item.value / Math.max(...analytics.chartData.map((d) => d.value))) * 100}%`,
-                  minHeight: "4px",
-                }}
-              ></div>
-              <div className="text-xs text-gray-600 mt-2 transform -rotate-45 origin-center">
-                {item.date.split("-")[2]}
+        <div className="relative">
+          <div className="flex items-end justify-between space-x-1 h-32 mb-8">
+            {analytics.chartData.map((item, index) => {
+              const maxValue = Math.max(...analytics.chartData.map((d) => d.value));
+              const heightPercentage = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
+
+              return (
+                <div key={index} className="flex-1 flex flex-col items-center justify-end h-full relative">
+                  <div
+                    className="bg-blue-500 w-full rounded-t hover:bg-blue-600 transition-colors cursor-pointer"
+                    style={{
+                      height: `${heightPercentage}%`,
+                      minHeight: "4px",
+                    }}
+                    title={`${item.date}: ${item.value}`}
+                  ></div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-between">
+            {analytics.chartData.map((item, index) => (
+              <div key={index} className="flex-1 text-center">
+                <div className="text-xs text-gray-600 transform -rotate-45 origin-center inline-block">
+                  {item.date.split("-")[2]}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
