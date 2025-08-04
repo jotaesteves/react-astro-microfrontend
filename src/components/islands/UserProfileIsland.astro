@@ -1,0 +1,85 @@
+---
+// This Astro component acts as a server island for the UserProfile microfrontend
+export interface Props {
+  userId?: number;
+}
+
+const { userId = 1 } = Astro.props;
+
+// Server-side data fetching (this runs on the server)
+let serverData = null;
+try {
+  // Simulate server-side API call
+  serverData = {
+    userId,
+    timestamp: new Date().toISOString(),
+    serverRendered: true,
+  };
+} catch (error) {
+  console.error("Server-side error:", error);
+}
+---
+
+<div class="user-profile-island" data-server-data={JSON.stringify(serverData)}>
+  <!-- This will be hydrated on the client -->
+  <div id={`user-profile-${userId}`} class="min-h-[120px]">
+    <!-- Loading state while React component loads -->
+    <div class="bg-white rounded-lg shadow-md p-6 animate-pulse">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 rounded w-32"></div>
+          <div class="h-3 bg-gray-300 rounded w-48"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Client-side hydration script
+  import UserProfile from "../react/UserProfile.tsx";
+  import { createRoot } from "react-dom/client";
+  import React from "react";
+
+  // Function to hydrate the component
+  function hydrateUserProfile() {
+    const containers = document.querySelectorAll('[id^="user-profile-"]');
+
+    containers.forEach((container) => {
+      const userId = parseInt(container.id.split("-")[2]) || 1;
+      const island = container.closest(".user-profile-island");
+      const serverData = island?.getAttribute("data-server-data");
+
+      let parsedServerData = null;
+      try {
+        parsedServerData = serverData ? JSON.parse(serverData) : null;
+      } catch (e) {
+        console.warn("Failed to parse server data:", e);
+      }
+
+      // Create React root and render
+      const root = createRoot(container);
+      root.render(
+        React.createElement(UserProfile, {
+          userId,
+          serverData: parsedServerData,
+        })
+      );
+    });
+  }
+
+  // Hydrate when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", hydrateUserProfile);
+  } else {
+    hydrateUserProfile();
+  }
+</script>
+
+<style>
+  .user-profile-island {
+    /* Island-specific styles */
+    isolation: isolate;
+  }
+</style>

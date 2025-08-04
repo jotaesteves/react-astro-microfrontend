@@ -1,0 +1,20 @@
+---
+// User Profile Astro Island
+import UserProfileComponent from "../react/UserProfile";
+
+export interface Props {
+  userId?: number;
+}
+
+const { userId = 1 } = Astro.props;
+---
+
+<!-- Client-side React component with client:load directive -->
+<UserProfileComponent client:load userId={userId} />
+
+<style>
+  /* Scoped styles for this island */
+  :global(.user-profile-container) {
+    transition: opacity 0.3s ease-in-out;
+  }
+</style>

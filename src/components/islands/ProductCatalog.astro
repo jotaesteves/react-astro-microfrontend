@@ -1,0 +1,21 @@
+---
+// Product Catalog Astro Island
+import ProductCatalogComponent from "../react/ProductCatalog";
+
+export interface Props {
+  category?: string;
+  limit?: number;
+}
+
+const { category = "all", limit = 6 } = Astro.props;
+---
+
+<!-- Client-side React component with client:load directive -->
+<ProductCatalogComponent client:load category={category} limit={limit} />
+
+<style>
+  /* Scoped styles for product catalog */
+  :global(.product-grid) {
+    transition: all 0.3s ease-in-out;
+  }
+</style>

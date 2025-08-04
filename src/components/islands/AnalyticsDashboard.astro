@@ -1,0 +1,21 @@
+---
+// Analytics Dashboard Astro Island
+import AnalyticsDashboardComponent from "../react/AnalyticsDashboard";
+
+export interface Props {
+  timeframe?: string;
+  userId?: number;
+}
+
+const { timeframe = "7d", userId = 1 } = Astro.props;
+---
+
+<!-- Client-side React component with client:load directive -->
+<AnalyticsDashboardComponent client:load timeframe={timeframe} userId={userId} />
+
+<style>
+  /* Scoped styles for analytics dashboard */
+  :global(.analytics-container) {
+    transition: all 0.3s ease-in-out;
+  }
+</style>

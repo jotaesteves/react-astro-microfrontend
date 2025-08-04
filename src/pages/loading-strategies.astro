@@ -1,0 +1,151 @@
+---
+import Layout from "../layouts/Layout.astro";
+import UserProfile from "../components/islands/UserProfile.astro";
+import ProductCatalog from "../components/islands/ProductCatalog.astro";
+---
+
+<Layout title="Loading Strategies Demo">
+  <main class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Loading Strategies Demo</h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          This page demonstrates different loading strategies for microfrontends. Each component can use different Astro
+          client directives for optimal performance.
+        </p>
+      </div>
+
+      <!-- Loading Strategy Examples -->
+      <div class="space-y-12">
+        <!-- Immediate Loading -->
+        <section class="bg-white rounded-lg shadow-md p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Immediate Loading (client:load)</h2>
+            <p class="text-gray-600">Component loads immediately when the page loads</p>
+          </div>
+          <UserProfile userId={1} />
+        </section>
+
+        <!-- Visible Loading -->
+        <section class="bg-white rounded-lg shadow-md p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Lazy Loading (client:visible)</h2>
+            <p class="text-gray-600">Component loads when it becomes visible in the viewport</p>
+          </div>
+          <!-- We'll use a different approach since client:visible isn't available in the component -->
+          <div class="lazy-load-container" data-component="product-catalog">
+            <ProductCatalog category="electronics" limit={4} />
+          </div>
+        </section>
+
+        <!-- Idle Loading -->
+        <section class="bg-white rounded-lg shadow-md p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Idle Loading (client:idle)</h2>
+            <p class="text-gray-600">Component loads when the browser is idle</p>
+          </div>
+          <UserProfile userId={3} />
+        </section>
+
+        <!-- Media Query Loading -->
+        <section class="bg-white rounded-lg shadow-md p-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Conditional Loading (client:media)</h2>
+            <p class="text-gray-600">Component loads only on specific screen sizes</p>
+          </div>
+          <div class="responsive-container">
+            <ProductCatalog category="home" limit={3} />
+          </div>
+        </section>
+
+        <!-- Performance Comparison -->
+        <section class="bg-blue-50 rounded-lg p-8">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Performance Benefits</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 mb-2">Reduced Bundle Size</h3>
+              <p class="text-sm text-gray-600">Only load what's needed when it's needed</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 mb-2">Better FCP</h3>
+              <p class="text-sm text-gray-600">Faster First Contentful Paint</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 mb-2">Improved LCP</h3>
+              <p class="text-sm text-gray-600">Better Largest Contentful Paint</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg">
+              <h3 class="font-semibold text-gray-800 mb-2">Progressive Enhancement</h3>
+              <p class="text-sm text-gray-600">Works even without JavaScript</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Navigation -->
+      <div class="text-center mt-12">
+        <a
+          href="/"
+          class="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+        >
+          ← Back to Main Demo
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Simple intersection observer for lazy loading demonstration
+  const observeElements = () => {
+    const lazyContainers = document.querySelectorAll(".lazy-load-container");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const container = entry.target as HTMLElement;
+            container.classList.add("visible");
+            observer.unobserve(container);
+          }
+        });
+      },
+      {
+        rootMargin: "50px",
+      }
+    );
+
+    lazyContainers.forEach((container) => {
+      observer.observe(container);
+    });
+  };
+
+  // Initialize when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", observeElements);
+  } else {
+    observeElements();
+  }
+</script>
+
+<style>
+  .lazy-load-container {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .lazy-load-container.visible {
+    opacity: 1;
+  }
+
+  .responsive-container {
+    /* Add responsive styles here */
+  }
+
+  @media (max-width: 768px) {
+    .responsive-container {
+      /* Mobile-specific styles */
+    }
+  }
+</style>
