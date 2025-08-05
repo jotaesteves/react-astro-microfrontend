@@ -1,0 +1,74 @@
+---
+export type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+const user: User = { firstName: "Alexandra", lastName: "Rosália Umberto", email: "alexandra@example.com" };
+
+const navbarDropdDowns = [
+  {
+    title: "Smart IZI",
+    icon: "📱",
+  },
+  {
+    title: "Alertas",
+    icon: "🔔",
+  },
+  {
+    title: "Vendas",
+    icon: "🛍️",
+  },
+];
+---
+
+<header>
+  <div class="flex p-4 border-2 border-millenium text-black">
+    <!-- Left section (70%) - logo, name, and navigation -->
+    <div class="flex-grow flex items-center justify-between" style="width: 70%;">
+      <!-- logo and name section -->
+      <div class="flex items-center">
+        <img src="/logo.jpg" alt="Logo" class="h-10 w-auto inline-block mr-2" />
+        <span class="text-md font-semibold">{user.firstName} <br /> {user.lastName}</span>
+      </div>
+      <!-- navigation section -->
+      <div class="flex-1 flex justify-end">
+        <ul class="flex">
+          {
+            navbarDropdDowns.map((item) => (
+              <li class="mx-2">
+                <button class="flex items-center text-black hover:text-blue-200">
+                  <span class={`icon-${item.icon} mr-1`}> {item.icon}</span>
+                  {item.title}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <!-- vertical line -->
+    <div class="border-l border-gray-300 h-12 mx-4"></div>
+
+    <!-- Right section (30%) - user profile and controls -->
+    <div class="flex items-center justify-start" style="width: 30%;">
+      <!-- user dropdown -->
+      <div class="relative">
+        <button class="w-8 h-8 rounded-md border-1 border-millenium flex items-center text-white hover:text-blue-200">
+          <span class="icon-user mx-auto">👤</span>
+        </button>
+      </div>
+
+      <!-- call center controls, rounded xl pill shaped with 5 circles inside -->
+      <div class="ml-4 bg-millenium rounded-full px-2 py-2 flex items-center space-x-2">
+        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center"><span>⏸︎</span></div>
+        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center"><span>↗️</span></div>
+        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center"><span>📤</span></div>
+        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center"><span>📞</span></div>
+        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center"><span>☎️</span></div>
+      </div>
+    </div>
+  </div>
+</header>

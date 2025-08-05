@@ -1,0 +1,54 @@
+---
+const tabs = [
+  { value: "360vision", label: "Visao 360" },
+  { value: "personalData", label: "Dados Pessoais" },
+  { value: "assetsProducts", label: "Patrimonio e Productos" },
+  { value: "channelsAndServices", label: "Canais e Serviços" },
+  { value: "historyInteractions", label: "Historico Interacões" },
+];
+---
+
+<nav class="flex items-center bg-white border-b border-gray-200 px-4">
+  <ul class="flex space-x-8">
+    {
+      tabs.map((tab, index) => (
+        <li>
+          <button
+            class={`py-4 px-2 text-sm font-medium transition-colors duration-200 border-b-2 ${
+              index === 0
+                ? "text-millenium border-millenium"
+                : "text-gray-500 border-transparent hover:text-pink-500 hover:border-pink-300"
+            }`}
+            data-tab={tab.value}
+          >
+            {tab.label}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  // Add click handlers for tab navigation
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll("[data-tab]");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // Remove active state from all buttons
+        buttons.forEach((btn) => {
+          btn.className = btn.className
+            .replace("text-millenium border-millenium", "text-gray-500 border-transparent")
+            .replace("text-pink-500 border-pink-500", "text-gray-500 border-transparent");
+        });
+
+        // Add active state to clicked button
+        button.className = button.className.replace(
+          "text-gray-500 border-transparent",
+          "text-millenium border-millenium"
+        );
+      });
+    });
+  });
+</script>
